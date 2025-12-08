@@ -4,6 +4,8 @@ This is the most important command file as it runs openface
 It has calibration as an option
 """
 
+# CORE MEASUREMENTS
+
 from mosaic.core_measurements.landmarks.landmarks import run as run_landmarks
 from mosaic.core_measurements.anchor.anchors import run as run_anchors
 from mosaic.core_measurements.angles.angles import run as run_angles
@@ -13,11 +15,15 @@ from mosaic.core_measurements.centering.centering import run as run_centering
 from mosaic.core_measurements.curves.curves import export_curve_coefficients as run_curve_fitting
 from mosaic.core_measurements.euclidean_distance.euclidean import run as run_euclidean_distance
 from mosaic.core_measurements.pose_correction.pose import run as run_pose_correction
-from mosaic.io import initialize_csvs
+
+# COMPLEX MEASUREMENTS
+
+from mosaic.complex_measurements.temporal.velocity.velocity import run as run_velocity
 
 import os
 from pathlib import Path
 from mosaic.Session.session_manager import SessionManagement
+from mosaic.io import initialize_csvs
 
 class TrialRun:
     def __init__(self):
@@ -48,10 +54,14 @@ class TrialRun:
 
         """
 
-        file = "/Users/harrywoodhouse/Desktop/OAS/OAS-Engine/data/test-data/v15044gf0000d1dlc67og65r2deqmhd0.csv"
+        file = "/Users/harrywoodhouse/Desktop/MOSAIC/MOSAIC-Engine/data/test-data/v15044gf0000d1dlc67og65r2deqmhd0.csv"
         file_name = os.path.basename(file).split('.')[0]
         trial_path = Path(trial_path)
         out_path = initialize_csvs(file_name, trial_path, force=True)
+
+        """CORE MEASUREMENTS
+        
+        """
 
         # ANCHOR MODULE
 
@@ -89,6 +99,19 @@ class TrialRun:
         # RUNNING BIO BASED AREA
 
         run_bio_area(out_path, out_path, force=True)
+
+
+        """
+        COMPLEX MEASUREMENTS
+        """
+
+        velocity = run_velocity()
+        print("RUNNIN LANDMARK VELOCITY")
+        velocity.run_landmark_velocity(out_path, out_path, force=True)
+
+        print("RUNNIN CURVE VELOCITY")
+
+        velocity.run_curve_velocity(out_path, out_path, force=True)
 
 
 

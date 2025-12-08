@@ -76,7 +76,7 @@ class LandmarkVelocity:
 
             velocity = displacement / elapsed_time
 
-            velocity_list.append(velocity)
+            velocity_list.append(float(velocity))
 
         return velocity_list
 

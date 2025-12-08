@@ -12,45 +12,35 @@ Then, to calculate how much the curve changes, we can compare the slop of each c
 
 from pathlib import Path
 import pandas as pd
+from mosaic.config import OUTER_BEZ_CURVE_LIST, INNER_BEZ_CURVE_LIST
 
 class CurveVelocity:
-    def __init__(self, src: str | Path | pd.DataFrame, curve_data) -> str | None:
-        if isinstance(src, str):
-            try:
-                self.landmarks = pd.read_csv(src)
-                return
-            except TypeError as e:
-                return f"File must be a csv format\n{e}"
-        elif isinstance(src, Path):
-            try:
-                self.landmarks = pd.read_csv(src)
-                return
-            except TypeError as e:
-                return f"File must be a csv format\n{e}"
-
+    def __init__(self, src: str | Path | pd.DataFrame) -> str | None:
+        if isinstance(src, (str, Path)):
+            self.landmarks = pd.read_csv(src)
         elif isinstance(src, pd.DataFrame):
             self.landmarks = src
-
-        self.curve_vals = curve_data
-
-
-    def _getting_data(self, row):
-        if isinstance(row, int):
-            pass
-        elif isinstance(row, str):
-            row = int(row)
         else:
-            return TypeError(f"row must be an int or str - not {type(row)}")
+            raise TypeError("landmarks must be a CSV path or a pandas DataFrame")
 
-        df = self.landmarks.set_index("frame")
+    @staticmethod
+    def _getting_data(landmarks, row):
+
+        df = landmarks.set_index("frame")
         df_row = df.loc[row]
 
-        data = {}
-        for i in self.curve_vals:
-            curve_val = df_row[i]
-            data.update({i: curve_val})
+        curves = []
+        for curve in OUTER_BEZ_CURVE_LIST:
+            curve_vals = []
+            time = df_row["timestamp"]
+            curve_vals.append(time)
+            for curve_val in curve:
+                curve_val_flt = df_row[curve_val]
+                curve_vals.append(curve_val_flt)
 
-        return data
+            curves.append(curve_vals)
+
+        return curves
 
     def _get_cubic_curve_gradient(self, curve, t):
         """
@@ -58,18 +48,26 @@ class CurveVelocity:
         that gives me the how the coeff really changes over time.
 
         this func is for cubic curves
+
+        :return: Single curve gradient - must pass one curve at a time
         """
-        slope = []
-        for coeff in curve:
+        coeffs = []
+        for coeff in curve[1:]:
+            coeffs.append(coeff)
 
-            # differential of cubic coeff function:
+            # derivative of cubic coeff function:
 
-            X_t = (3 * coeff[0] * (t ** 2)) + (2 * coeff[2] * t) + (coeff[4] * t)
-            Y_t = (3 * coeff[1] * (t ** 2)) + (2 * coeff[3] * t) + (coeff[5] * t)
+        X_t = (3 * coeffs[0] * (t ** 2)) + (2 * coeffs[2] * t) + (coeffs[4] * t)
+        Y_t = (3 * coeffs[1] * (t ** 2)) + (2 * coeffs[3] * t) + (coeffs[5] * t)
 
-            slope.append(Y_t / X_t)
+        slope = Y_t / X_t
+
+        # then we make return it like [time, slope} so it makes getting velo easier
+
+        slope_velo = [curve[0], float(slope)]
+        print(slope_velo)
         return slope
-        pass
+
 
     def _get_quadratic_curve_gradient(self, curve, t):
         # coeff will be a series of 4 lists which contain the x, y coeffs
@@ -84,10 +82,72 @@ class CurveVelocity:
             slope.append(Y_t / X_t)
         return slope
 
+    def curve_velocity(self, row: int):
+        """
+        We can call the function to calculate the curve slope at each point of t
+        """
+
+        cubic_curve_velocity = []
+        quadratic_curve_velocity = []
+
+        if row == 1:
+            cubic_curve_velocity = 0
+            quadratic_curve_velocity = 0
+
+            return cubic_curve_velocity, quadratic_curve_velocity
+
+
+        """
+        CUBIC CURVE VELOCITY:
+        """
+
+        cubic_t = [0, 1/3, 2/3, 1]
+
+        current_cubic_curve = self._getting_data(self.landmarks, row)
+        previous_cubic_curve = self._getting_data(self.landmarks, row-1)
+
+        current_cubic_curve_gradients = []
+
+        previous_cubic_curve_gradients = []
 
 
 
-    def curve_area_calculation(self, curve_data):
+        for curve, t in zip(current_cubic_curve, cubic_t):
+            current_cubic_curve_gradients.append(self._get_cubic_curve_gradient(curve, t))
+
+        for curve, t in zip(previous_cubic_curve, cubic_t):
+            previous_cubic_curve_gradients.append(self._get_cubic_curve_gradient(curve, t))
+
+        # Now we have a list of the gradients for all 4 control points along the current and previous curve
+
+        cubic_gradients = []
+
+        for curr_curve, prev_curve in zip(current_cubic_curve, previous_cubic_curve):
+            cubic_gradient_difference = []
+            for curr_gradient, prev_gradient in zip(curr_curve, prev_curve):
+                cubic_gradient_difference.append(curr_gradient - prev_gradient)
+
+            cubic_gradients.append(cubic_gradient_difference)
+
+        # Now that we have a list of the gradient displacements, we can iterate through each list and divide it by time to get gradient/s
+
+
+        return cubic_gradients
+
+        # now we can calculate the difference in time and then divide the gradient displacement by time to get gradient/s
+
+
+
+        # we can do the same for quadratic curves
+
+
+
+
+
+
+
+
+    #def curve_area_calculation(self, curve_data):
         """
         This function essentially takes the curve in the current frame and the curve from the previous frame and
         calculates the area inbetween the two curves. This is then used to see how the curve has increased over
@@ -96,18 +156,18 @@ class CurveVelocity:
         Mapping overtime, we can see how active the curves are over time. A hilly graph means the curve moved a lot
         and a flatter graph means the curve didn't move much at all
         """
-        pass
+        #pass
 
-    def curve_slope_calculator(self, curve_data):
+    #def curve_slope_calculator(self, curve_data):
         """
         This calculates the slop of the curve
 
         Mapping over time we could see how curvy the curve is over time - a hillier graph means that curve was more curvey
         over time or saw increases/decreases in curviness and a flatter graph indicates the curve didn't change its curvature very much
         """
-        pass
+        #pass
 
-    def mid_curve(self, curve_data):
+    #def mid_curve(self, curve_data):
         """
         This calculates how the curve has moved from the previous frame to the current by
         subtracting the previous curve from the current.
@@ -115,4 +175,4 @@ class CurveVelocity:
         When mapping over time, we can see how much the curve changes and see if it changes a lot or a littl (still
         working on th logic for this)
         """
-        pass
+        #pass

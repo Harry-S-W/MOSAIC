@@ -13,7 +13,7 @@ class XYUncertainty:
         updates = pd.DataFrame(index=frames_index)
 
 
-        landmark_video = "/Users/harrywoodhouse/Desktop/OAS/MOSAIC-Engine/data/test-data/v15044gf0000d1dlc67og65r2deqmhd0.mp4" # hardcoded for now but will change
+        landmark_video = "/Users/harrywoodhouse/Desktop/MOSAIC/MOSAIC-Engine/data/test-data/v15044gf0000d1dlc67og65r2deqmhd0.mp4" # hardcoded for now but will change
         output_file = os.path.join(self.session._read_session().get("currentTrial"), "calibration")
 
         calibration = LandmarkCalibration(landmark_video, output_file)
