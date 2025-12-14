@@ -13,8 +13,10 @@ You should have received a copy of the GNU General Public License along with
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
-use coreMeasurements::anchor::anchor::Anchor
+use MOSAIC::coreMeasurements::anchor::anchor::Anchor;
 
 fn main(){
-    Anchor;
+
+    println!("MOSAIC -- v0.2.0 pre-release (GLPv3)");
+    Anchor();
 }
