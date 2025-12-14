@@ -11,10 +11,15 @@ PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with 
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
-*/
 
-use coreMeasurements::anchor::anchor::Anchor
+==================================================================================
 
-fn main(){
-    Anchor;
-}
+MOSAIC DRIVER 
+
+Mosaic Driver is a datatype verification system which verifies the structure of the datafile
+used by MOSAIC. 
+
+This Driver is the native driver for MOSAIC and is called when running participant trials
+to ensure the data structure is adequate.
+
+*.

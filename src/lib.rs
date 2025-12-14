@@ -8,3 +8,5 @@ MOSAIC is distributed in the hope that it will be useful, but WITHOUT ANY WARRAN
 You should have received a copy of the GNU General Public License along with Foobar. If not, see <https://www.gnu.org/licenses/>.
 
 */
+
+pub mod coreMeasurements;

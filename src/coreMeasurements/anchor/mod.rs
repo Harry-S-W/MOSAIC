@@ -13,8 +13,5 @@ You should have received a copy of the GNU General Public License along with
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
-use coreMeasurements::anchor::anchor::Anchor
-
-fn main(){
-    Anchor;
-}
+pub mod runner;
+pub mod anchor;

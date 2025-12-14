@@ -13,8 +13,14 @@ You should have received a copy of the GNU General Public License along with
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
-use coreMeasurements::anchor::anchor::Anchor
 
-fn main(){
-    Anchor;
+/*
+ANCHOR Calculation
+
+This file calculates the anchor as a reference point in the mouth by taking the average x and y coordinates
+of points across the mouth and defining a centralised anchor point
+*/
+
+pub fn Anchor(){
+    println!("This is the anchor module!")
 }
