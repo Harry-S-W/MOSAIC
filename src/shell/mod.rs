@@ -13,14 +13,4 @@ You should have received a copy of the GNU General Public License along with
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
-// CORE MEASUREMENTS
-use MOSAIC::coreMeasurements::anchor::anchor::Anchor;
-
-// SHELL
-use MOSAIC::shell::statefulCLI::session_manager::{DirectoryVerifiers};
-
-fn main(){
-
-    println!("MOSAIC -- v0.2.0 pre-release (GLPv3)");
-    Anchor();
-}
+pub mod statefulCLI;

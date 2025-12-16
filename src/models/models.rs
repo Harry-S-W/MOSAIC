@@ -21,3 +21,6 @@ praatAnalysis file, and userOutputFile.
 fn coreMeausrementFile(){
     println!("Core MeausermentFile!")
 }
+
+// we will get the argument the user passes as well as the driver and the driver will tell us what information
+// we will include in the UMD
