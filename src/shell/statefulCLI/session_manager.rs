@@ -13,121 +13,92 @@ You should have received a copy of the GNU General Public License along with
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
-/*
-    This file is the session manager and checks where they are within a MOSAIC project.
-*/
+use serde::{Deserialize, Serialize};
 
-// test path for now
+const SESSION_FILE: &str = ".mosaic";
 
-// const PATH: &str = "path/file.txt"; // this will be replaced by an arg passed through CLI
-
-// Session Data Structure:
-
-#[derive(Debug)]
-pub struct SessionStructure{
-    project_directory: String,
-    participant_directory: String,
-    trial_directory: String,
+#[derive(Debug, Serialize, Deserialize)] 
+pub struct SessionStructure {
+    pub project_directory: String,
+    pub participant_directory: String,
+    pub trial_directory: String,
 }
 
-// Onwer of SessionStructure struct:
-
-#[derive(Debug)]
-pub struct SessionData{
-    data: SessionStructure,
+// 2. ADDED DERIVES: Debug allows you to use {:#?} in println
+#[derive(Debug, Serialize, Deserialize)] 
+pub struct SessionData {
+    pub data: SessionStructure,
 }
-
-
-// Directory verifiers
-// Check whether or now the user is in a project, participant, or trial directory, 
-// and also checks whether or not they exist.
 
 pub struct DirectoryVerifiers;
-impl DirectoryVerifiers{
-
-    pub fn check_project_directory(path: &str){
-        println!("Checking if project directory '{}' exists.", path);
-    }
-
-    pub fn check_participant_directory(path: &str){
-        println!("Checking if participant directory '{}' exists.", path);
-    }
-
-    pub fn check_trial_directory(path: &str){
-        println!("Checking if trial directory '{}' exists.", path);
-    }
-
-    pub fn check_any_directory(path: &str){
-        // this func checks the directory exists before updating
+impl DirectoryVerifiers {
+    pub fn check_any_directory(path: &str) {
         println!("Checking if {} exists...", path);
     }
-
 }
 
-// Session read and write func
-impl SessionData{
-    // Session Reader
-    // This reads the session data of mosaic
+impl SessionData {
+    pub fn read_session_data() -> Self {
+        let contents = std::fs::read_to_string(".mosaic").unwrap_or_else(|_| String::from("{}"));
+        
+        serde_json::from_str(&contents).unwrap_or_else(|_| Self::new_blank())
+    }
 
-    pub fn read_session_data() -> Self{
-        // in here we can read the session data
-        println!("Reading and returning session data"); 
+    pub fn write_session_data(&self) {
+        let json = serde_json::to_string_pretty(&self).unwrap();
+        std::fs::write(".mosaic", json).expect("[FATAL MOSAIC ERROR] Failed to save!");
+    }
 
-        // placeholder:
+    pub fn initialize() -> Self {
+        let path = SESSION_FILE;
 
-        let project_path: String = "desktop/MOSAIC/project2".to_string();
-        let participant_path: String = "desktop/MOSAIC/project2/participants".to_string();
-        let trial_path: String =  String::new();
-        // pretend above is the data we have got from reading session json
+        if std::path::Path::new(path).exists() {
+            Self::read_session_data()
+        }
+        else {
+            Self::create_file(path)
+        }
+    }
+
+    pub fn create_file(_path: &str) -> Self {
+        let new_session = Self::new_blank();
+        new_session.write_session_data();
+        new_session
+    }
+
+    pub fn new_blank() -> Self {
 
         SessionData {
             data: SessionStructure {
-                project_directory: project_path,
-                participant_directory: participant_path,
-                trial_directory: trial_path,
+                project_directory: String::from("None"),
+                participant_directory: String::from("None"),
+                trial_directory: String::from("None"),
             }
         }
-
-
-
-
     }
 
-    pub fn write_session_data(data: &mut SessionData){
-        // we write the session data in here
-        println!("Writing session data...\n\n{:#?}", data)
+    pub fn reset_session(&mut self) {
+        self.data.project_directory = String::from("None");
+        self.data.participant_directory = String::from("None");
+        self.data.trial_directory = String::from("None");
+        self.write_session_data(); 
     }
-
-
-
 }
 
 pub struct SessionUpdate;
-impl SessionUpdate{
-    // Session Update System
-    // Updates where the user is within a mosaic project
+impl SessionUpdate {
+    pub fn update_project_directory(path: &str) {
+        DirectoryVerifiers::check_any_directory(path);
 
-    pub fn update_project_directory(path: &str){
-        // need to verify the project exists
-        DirectoryVerifiers::check_any_directory(&path);
-
-        // when that function succesffuly runs, we can update the session data
-        // because they are changing project root, we can just reset all session data
-        // and set project_directory to the one they entered.
-
-        let mut updated_project_directory = SessionData {
+        let updated_project_directory = SessionData {
             data: SessionStructure {
                 project_directory: path.to_string(),
-                participant_directory: String::new(),
-                trial_directory: String::new(),
+                participant_directory: String::from("None"),
+                trial_directory: String::from("None"),
             }
         };
 
-        // Session structure is written by calling the write function
-
-        SessionData::write_session_data(&mut updated_project_directory);
-
-        // Notifaction to terminal:
+        updated_project_directory.write_session_data();
 
         println!("Opened project path: '{}'.", path)
     }

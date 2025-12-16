@@ -25,7 +25,7 @@ use rustyline::{DefaultEditor, Result};
 
 use crate::shell::statefulCLI::session_manager::{SessionData};
 
-pub fn shell_initiation() -> Result<()> {
+pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
     println!("MOSAIC -- v0.2.0 pre-release (GLPv3)\n"); // opening message
     let mut rl = DefaultEditor::new()?;
 

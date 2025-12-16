@@ -36,6 +36,8 @@ fn main(){
 
     // running cli
 
-    shell_initiation();
+    let mut session = SessionData::read_session_data();
+
+    shell_initiation(&mut session);
 
 }
