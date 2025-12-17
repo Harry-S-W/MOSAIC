@@ -17,7 +17,7 @@ MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 use MOSAIC::coreMeasurements::anchor::anchor::Anchor;
 
 // SHELL
-use MOSAIC::shell::statefulCLI::session_manager::{DirectoryVerifiers, SessionData};
+use MOSAIC::shell::projectManager::session_manager::{DirectoryVerifiers, SessionData};
 use MOSAIC::shell::shell::{shell_initiation};
 
 fn main(){

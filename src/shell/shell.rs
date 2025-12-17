@@ -23,7 +23,7 @@ use std::process::Command;
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 
-use crate::shell::statefulCLI::session_manager::{SessionData};
+use crate::shell::projectManager::session_manager::{SessionData, DirectoryVerifiers};
 
 pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
     println!("MOSAIC -- v0.2.0 pre-release (GLPv3)\n"); // opening message
@@ -36,6 +36,9 @@ pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
                 if line.trim() == "quit"{
                     break;
                 }
+                if line.trim() == "exit"{
+                    break;
+                }
 
                 if line.trim() == "session"{
                     let data = SessionData::read_session_data();
@@ -43,7 +46,7 @@ pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
                     println!("Session Data:\n{:#?}", data);
                     
                 }
-            }
+
             Err(ReadlineError::Interrupted) => { // Handles Ctrl-C
                 println!("CTRL-C");
                 break
