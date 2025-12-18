@@ -16,21 +16,40 @@ MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 use std::fmt;
 
 // MOSAIC LEVEL ERRORS
-
 #[derive(Debug)]
 pub enum MosaicError {
     InvalidPath,
     Project(ProjectError),
+    Participant(ParticipantError),
+    Trial(TrialError),
     Io(std::io::Error),
 }
 
 // PORJECT LEVEL ERRORS
-
 #[derive(Debug)]
 pub enum ProjectError{
     MissingMetaData,
     NoOpenProject,
     RequireProject,
+}
+
+// PARTICIPANT LEVEL ERRORS
+#[derive(Debug)]
+pub enum ParticipantError{
+    MissingMetaData,
+    NoOpenParticipant,
+    RequireParticipant,
+    InvalidParentUUIDError,
+}
+
+// TRIAL LEVEL ERRORS
+#[derive(Debug)]
+pub enum TrialError{
+    MissingMetaData,
+    NoOpenTrial,
+    RequireTrial,
+    InvalidParentUUIDError,
+    InvalideGrandparentUUIDError,
 }
 
 impl fmt::Display for MosaicError {
@@ -40,16 +59,60 @@ impl fmt::Display for MosaicError {
             MosaicError::Io(e) => write!(f, "System Error: {}", e),
 
             // PROJECT ERRORS
-            MosaicError::Project(ProjectError::MissingMetaData) => write!(f, "Missing project metadata.\n\n 
-                Either this is not a valid project path\n or the 'metadata.mosaicproj' file has been deleted."),
+            MosaicError::Project(ProjectError::MissingMetaData) => 
+                write!(f, "Missing project metadata.\n\n
+                Either this is not a valid project path or the 'project.mosaicproj' file has been deleted."),
 
-            MosaicError::Project(ProjectError::NoOpenProject) => write!(f, "You are not in a project directory."),
+            MosaicError::Project(ProjectError::NoOpenProject) => 
+                write!(f, "You are not in a project directory."),
 
-            MosaicError::Project(ProjectError::RequireProject) => write!(f, "You must be in a project directory to use that command.\n\n.   
-            Use <open project 'project path'>."),
+            MosaicError::Project(ProjectError::RequireProject) => 
+                write!(f, "You must be in a project directory to use that command.\n\n
+                Use <open project 'project path'>."),
+
+            // PARTICIPANT ERRORS
+            MosaicError::Participant(ParticipantError::MissingMetaData) => 
+                write!(f, "Missing participant metadata.\n\n
+                Either this is not a valid participant path\n
+                or the ',<participant_id>.mosaicproj' file has been deleted."),
+            
+            MosaicError::Participant(ParticipantError::NoOpenParticipant) =>
+                write!(f, "You are not in a participant directory."),
+
+            MosaicError::Participant(ParticipantError::RequireParticipant) => 
+                write!(f, "You must be in a participant directory to use that command.\n\n    
+                Use <open participant 'participant path'>."),
+
+            MosaicError::Participant(ParticipantError::InvalidParentUUIDError) =>
+                write!(f, "Current participant does not correspond to this project.\nThis is due
+                to the UUID in '<participant_id>.mosaicproj' not matching with the UUID in 'project.mosaicproj'.\n\n
+                Make sure to create participant directories through the <create> command - not through file manager."),
+
+            // TRIAL ERRORS
+            MosaicError::Trial(TrialError::MissingMetaData) => 
+                write!(f, "Missing trial metadata.\n\n 
+                Either this is not a valid trial path\nor the 'trial.mosaicproj' file has been deleted."),
+
+            MosaicError::Trial(TrialError::NoOpenTrial) =>
+                write!(f, "You are not in a trial directory."),
+            
+            MosaicError::Trial(TrialError::RequireTrial) =>
+                write!(f, "You must be in a trial directory to use that command.\n\n    
+                Use <open trial 'trial path'>."),
+
+            MosaicError::Trial(TrialError::InvalidParentUUIDError) =>
+                write!(f, "Current trial does not correspond to this participant.\n
+                This is due to the UUID in '<trial_id>.mosaicproj' not matching with the UUID in 'participant.mosaicproj'.\n\n
+                Make sure to create trial directories through the <create> command - not through file manager."),
+
+            MosaicError::Trial(TrialError::InvalideGrandparentUUIDError) =>
+                write!(f, "Current trial does not correspond to this project.\n
+                This is due to the UUID in '<trial_id>.mosaicproj' not matching with the UUID in 'project.mosaicproj'.\n\n
+                Make sure to create trial directories through the <create> command - not through file manager."),
+            
+                
 
             // LAST CASE ERRORS
-
             _ => write!(f, "{:?}", self)
             
         }

@@ -14,7 +14,7 @@ MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
 use serde::{Deserialize, Serialize};
-use crate::errors::{MosaicError, ProjectError};
+use crate::errors::{MosaicError, ProjectError, ParticipantError, TrialError};
 
 const SESSION_FILE: &str = ".mosaic";
 
@@ -71,8 +71,8 @@ impl SessionData {
         SessionData {
             data: SessionStructure {
                 project_directory: String::from("None"), //Path/supermegapath/file.mosaicproj
-                participant_directory: String::from("None"),
-                trial_directory: String::from("None"),
+                participant_directory: String::from("Path/supermegapath/participant.mosaicproj"),
+                trial_directory: String::from("Path/supermegapath/trial.mosaicproj"),
             }
         }
     }
@@ -87,12 +87,13 @@ impl SessionData {
 
 pub struct SystemVerifier;
 impl SystemVerifier {
-    pub fn project() -> Result<(), MosaicError>{
+    pub fn project() -> Result<String, MosaicError>{
         let session_info = SessionData::read_session_data();
         let project_path = session_info.data.project_directory;
         
+        // this logic is a bit weird but this is only a test bit of code 
         if project_path != "None" {
-            println!("Project Path: {}", project_path)
+            return std::result::Result::Ok(project_path)
 
         }else if project_path == "None" {
             return Err(MosaicError::Project(ProjectError::RequireProject))
@@ -100,37 +101,41 @@ impl SystemVerifier {
         }else {
             return Err(MosaicError::Project(ProjectError::RequireProject))
         }
-        Ok(())
+        Ok(String::from(project_path))
     }
 
-    pub fn participant(){
+    pub fn participant() -> Result<String, MosaicError>{
         let session_info = SessionData::read_session_data();
-        let participant_path = session_info.data.project_directory;
+        let participant_path = session_info.data.participant_directory;
         
-        if participant_path == "None" {
-            println!("[MOSAIC ERROR] You are not in a participant directory.\n")
+        // this logic is a bit weird but this is only a test bit of code 
+        if participant_path != "None" {
+            return std::result::Result::Ok(participant_path)
             
-        }else if participant_path != "None" {
-            // return Err(MosaicError::Project(ProjectError::RequireProject))
+        }else if participant_path == "None" {
+            return Err(MosaicError::Participant(ParticipantError::RequireParticipant))
 
         }else {
-            println!("[MOSAIC ERROR] An unknown error occured reading the path content in .mosaic")
+            return Err(MosaicError::Participant(ParticipantError::RequireParticipant))
         }
+        Ok(String::from(participant_path))
     }
 
-    pub fn trial(){
+    pub fn trial() -> Result<String, MosaicError>{
         let session_info = SessionData::read_session_data();
-        let trial_path = session_info.data.project_directory;
+        let trial_path = session_info.data.trial_directory;
         
-        if trial_path == "None" {
-            println!("[MOSAIC ERROR] You are not in a trial directory.\n")
+        // this logic is a bit weird but this is only a test bit of code
+        if trial_path != "None" {
+            return std::result::Result::Ok(trial_path)
             
-        }else if trial_path != "None" {
-            println!("Trial Path: {}", trial_path)
+        }else if trial_path == "None" {
+            return Err(MosaicError::Trial(TrialError::RequireTrial))
 
         }else {
-            println!("[MOSAIC ERROR] An unknown error occured reading the path content in .mosaic")
+            return Err(MosaicError::Trial(TrialError::RequireTrial))
         }
+        Ok(String::from(trial_path))
     }
 }
 

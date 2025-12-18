@@ -48,9 +48,35 @@ pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
                     
                 }
 
+                // FOLLOWING THREE COMMANDS ARE JUST FOR TESING THE SYSTEM VERIFIER FUNCS IN "session.rs"
                 if line.trim() == "project"{
-                    match SystemVerifier::project() {
-                        Ok(_) => {}
+                    let project_path = SystemVerifier::project();
+                    match project_path {
+                        Ok(_) => println!("Project Path: {:?}", project_path.unwrap()),
+
+                        Err(err) => {
+                            eprintln!("[MOSAIC ERROR] {}", err)
+                        }
+
+                    }               
+                }
+
+                if line.trim() == "participant"{
+                    let participant_path = SystemVerifier::participant();
+                    match participant_path {
+                        Ok(_) => println!("Participant Path: {:?}", participant_path.unwrap()),
+
+                        Err(err) => {
+                            eprintln!("[MOSAIC ERROR] {}", err)
+                        }
+
+                    }               
+                }
+
+                if line.trim() == "trial"{
+                    let trial_path = SystemVerifier::trial();
+                    match trial_path {
+                        Ok(_) => println!("Path: {:?}", trial_path.unwrap()),
 
                         Err(err) => {
                             eprintln!("[MOSAIC ERROR] {}", err)
