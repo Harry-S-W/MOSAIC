@@ -13,3 +13,10 @@ You should have received a copy of the GNU General Public License along with
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
+use crate::models::coreMeasurementModel::UMD{UMD};
+
+// all we have to do is 
+//  read csv
+//  extract landmarks
+//  map landmarks to UMD struct
+//  return that landmark

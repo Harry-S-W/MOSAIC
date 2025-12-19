@@ -25,6 +25,9 @@ pub struct UMD {
     z: Vec<f64>,
 }
 
+// POINT ORDER:
+// LIPS (CLOCKWISE ALWAYS) -> TONGUE -> JAW -> OTHERS
+
 pub enum LandmarkType{
     LeftCommissure,
     RightCommissure,
@@ -46,6 +49,20 @@ pub enum LandmarkType{
     InnerLowerLip,
     OuterUpperLip,
     OuterLowerLip,
+
+    // Tongue
+    Apex,
+    Root
+
+    // OTHER POINTS
+    LeftJaw,
+    RightJaw,
+    CentreJaw, // chin
+    NsalaBridge,
+    LeftNasalTip,
+    RightNasalTip,
+
+
 }
 
 // UMD STRUCTURE:
