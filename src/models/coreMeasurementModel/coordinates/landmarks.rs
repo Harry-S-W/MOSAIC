@@ -11,15 +11,4 @@ PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with 
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
-
-==================================================================================
-
-OpenFace Driver
-
-OpenFace Driver takes the existing file structure of OpenFace and transforms it into
-the file structure that MOSAIC utilizes. 
-
-This driver is part of the native driver package that MOSAIC has pre-installed. 
 */
-
-use crate::models::coreMeasurementModel::UMD{UMD};

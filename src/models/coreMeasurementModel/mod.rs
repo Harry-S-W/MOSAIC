@@ -19,6 +19,14 @@ structure used by MOSAIC. The goal is to make this software as adapbtable as pos
 if one is processing data with 60 points on the lips or 10 points on the lips, they can calculate
 lip curvature regardless of the amount of points (of course, a minimum amount of points is reauired).
 
+(IGNORE MOST OF THIS)
+
+Including the subdirectories below, UMD has some requirements to process any mouth data. 
+    - LIPS
+        1. Commissure points (left and right)
+        2. Philtrum and lower vermillion border (top and bottom) - these are the most basic requirements of data requried to process lips as these are the "anchors" if you will
+
+
 ./Models contains a few subdirectories and each one has a specific role outlined below:
 
     /anchor - name scheme follows "anchor" + x/y/z (where applicable).
@@ -69,4 +77,9 @@ lip curvature regardless of the amount of points (of course, a minimum amount of
         i.e. URt1/10xunc, URt1/10yunc, URt1/10zunc,... URt10/10xunc, URt10/10yunc, URt10/10zunc
             
 I think a hasmap is best for this type of variable dataset
+
+MOSAIC ITERATES THROUGH LOTS OF FILES AS IT BUILDS UPON MEASUREMENTS IT CALCULATES - AND THE FIRST UMD FILE CONSISTS OF:
+    Frame/Sampling #, timestamp, Landmark coordinates (x, y, z (if applicable)) - 4 MUST BE the core values outlined above, Pose Values (X, Y, Z) (if applicable)
 */
+
+pub mod UMD;

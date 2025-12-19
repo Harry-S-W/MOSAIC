@@ -22,6 +22,7 @@ pub enum MosaicError {
     Project(ProjectError),
     Participant(ParticipantError),
     Trial(TrialError),
+    UMD(UMDError),
     Io(std::io::Error),
 }
 
@@ -52,10 +53,33 @@ pub enum TrialError{
     InvalideGrandparentUUIDError,
 }
 
+// UMD ERRORS
+#[derive(Debug)]
+pub enum UMDError{
+    MissingCommisures, // row based error
+    MissingLeftCommisure, // row based error 
+    MissingRightCommisure, // row based error
+    MissingPhiltrum, // row based error
+    MissingLowerVermillionBorder, // row based error
+    MissingValue, // for when there is a missing value in like a csv file, json, etc
+    MissingRow, // most common for csv files like OpenFace
+    MissingColumn, // same as above - useful for csv files like OpenFace 
+    InvalidValueType, // When a value is not the correct one - like an x value should never be a bool
+    
+    // OpenFace/Video based tracking errors:
+    MissingFrameValue, // when that row is missing frame value
+    MissingPoseX, // Only enabled if the user selected pose correction when running command
+    MissingPoseY, // Only enabled if the user selected pose correction when running command
+    MissingPoseZ, // Only enabled if the user selected pose correction when running command
+    MissingConfidence, // we need OpenFace confidence levels when using fram filtering to excluce bad frames
+
+}
+
 impl fmt::Display for MosaicError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result{
         match self{
             // MOSAIC/HIGHER LEVEL ERRORS
+            MosaicError::InvalidPath => write!(f, "Missing path"),
             MosaicError::Io(e) => write!(f, "System Error: {}", e),
 
             // PROJECT ERRORS
