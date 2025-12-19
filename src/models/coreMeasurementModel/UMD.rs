@@ -52,7 +52,7 @@ pub enum LandmarkType{
 
     // Tongue
     Apex,
-    Root
+    Root,
 
     // OTHER POINTS
     LeftJaw,
