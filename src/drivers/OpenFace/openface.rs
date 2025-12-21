@@ -174,6 +174,9 @@ pub struct OpenFaceHeaderMap {
     pub frame: usize,
     pub timestamp: usize,
     pub confidence: usize,
+    pub pose_x: usize,
+    pub pose_y: usize,
+    pub pose_z: usize,
     pub x_start: usize,
     pub y_start: usize,
     pub z_start: Option<usize>,
@@ -195,6 +198,9 @@ impl OpenFaceHeaderMap {
             frame: find_col("frame")?,
             timestamp: find_col("timestamp")?,
             confidence: find_col("confidence")?,
+            pose_x: find_col("pose_Rx")?,
+            pose_y: find_col("pose_Ry")?,
+            pose_z: find_col("pose_Rz")?,
             x_start,
             y_start,
             z_start,
@@ -232,6 +238,10 @@ pub fn parse_openface_data(path: &Path) -> Result<UMD, MosaicError> {
     
         let frame_val: u32 = record[header_map.frame].parse().unwrap_or(0);
         let timestamp: f32 = record[header_map.timestamp].parse().unwrap_or(0.0);
+        let confidence: f32 = record[header_map.confidence].parse().unwrap_or(0.0);
+        let pose_x: f64 = record[header_map.pose_x].parse().unwrap_or(0.0);
+        let pose_y: f64 = record[header_map.pose_y].parse().unwrap_or(0.0);
+        let pose_z: f64 = record[header_map.pose_z].parse().unwrap_or(0.0);
 
         for i in 48..68 { // hardcoded only to get lip points but will change
             let landmark_enum = OpenFaceLandmarkType::openface_index(i);
@@ -244,11 +254,14 @@ pub fn parse_openface_data(path: &Path) -> Result<UMD, MosaicError> {
                 .and_then(|v| v.parse().ok())
                 .unwrap_or(0.0);
 
-            /*if frame_val == 10 { // Just check frame 10
-            println!("Frame 10, Point {} - Lable: {} -> x: {}, y: {}, z: {}", i, label, x, y, z);
-            } */ // TESTING ^^
+            // temp making pose bool = true
+            let pose = true;
+
+            if frame_val == 10 { // Just check frame 10
+            println!("Frame: {} - Timestamp: {} - Confidence: {} - Pose: {} - Pose_X: {} - Pose_Y: {} - Pose_Z: {} - Point #: {} - Label: {} - X: {} - Y: {} - Z: {}", frame_val, timestamp, confidence, pose, pose_x, pose_y, pose_z, i, label, x, y, z);
+            }  // TESTING ^^
             
-            umd.add_point(frame_val, timestamp, i as u32, label, x, y, z);
+            umd.add_point(frame_val, timestamp, confidence, pose, pose_x, pose_y, pose_z, i as u32, label, x, y, z);
     
         }
     }

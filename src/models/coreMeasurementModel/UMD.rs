@@ -17,8 +17,16 @@ MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 use crate::drivers::OpenFace::openface::{OpenFaceLandmarkType};
 
 pub struct UMD {
+    // admin info
     frame: Vec<u32>,
     timestamp: Vec<f32>,
+    pose: Vec<bool>, // Because some pose values might be 0, we need a seperate bool value to determine if we are processing 
+
+    // pose values
+    pose_x: Vec<f64>,
+    pose_y: Vec<f64>,
+    pose_z: Vec<f64>,
+
     coordinate_number: Vec<u32>,
     types: Vec<String>, // we need to know whether or not this point was a commissure, philtrum, etc - defulat lip points can just be called "point"
     x: Vec<f64>,
@@ -31,14 +39,14 @@ pub struct UMD {
 // LANDMARK TYPE STRUCTURE HAS BEEN MOVED TO BE DRIVER SPECIFIC
 
 // UMD STRUCTURE:
-
-// frame: | time_stamp | coordinate_number |        type        |     x     |     y     |     z    
-// 1        0.01        1                   InnerLeftCommissure  0.0234      323.3276    10942
-// 1        0.01        2                   InnerUpperLip        2.3234      323.3276    10942
-// 1        0.01        3                   ...                  ...         ...         ...
-// 1        0.01        4                   ...                  ...         ...         ...
-// 1        0.01        5                   ...                  ...         ...         ...
-// 1        0.01        6                   ...                  ...         ...         ...
+// u32      f32          bool    f64        f64        f64        u32                        u32/String       f64         f64         f64  
+// frame: | time_stamp | pose |  pose_x  |  pose_y  |  pose_z  |  coordinate_number |        type        |     x     |     y     |     z    
+// 1        0.01        1      0.235      ...        ...         1                   InnerLeftCommissure  0.0234      323.3276    10942
+// 1        0.01        1      4.252      ...        ...         2                   InnerUpperLip        2.3234      323.3276    10942
+// 1        0.01        1      ...        ...        ...         3                   ...                  ...         ...         ...
+// 1        0.01        1      ...        ...        ...         4                   ...                  ...         ...         ...
+// 1        0.01        1      ...        ...        ...         5                   ...                  ...         ...         ...
+// 1        0.01        1      ...        ...        ...         6                   ...                  ...         ...         ...
 
 
 impl UMD{
@@ -49,6 +57,10 @@ impl UMD{
         Self {
             frame: Vec::with_capacity(total_entries.try_into().unwrap()),
             timestamp: Vec::with_capacity(total_entries.try_into().unwrap()),
+            pose: Vec::with_capacity(total_entries.try_into().unwrap()),
+            pose_x: Vec::with_capacity(total_entries.try_into().unwrap()),
+            pose_y: Vec::with_capacity(total_entries.try_into().unwrap()),
+            pose_z: Vec::with_capacity(total_entries.try_into().unwrap()),
             coordinate_number: Vec::with_capacity(total_entries.try_into().unwrap()),
             types: Vec::with_capacity(total_entries.try_into().unwrap()),
             x: Vec::with_capacity(total_entries.try_into().unwrap()),
@@ -58,10 +70,14 @@ impl UMD{
 
     }
 
-    pub fn add_point(&mut self, frame: u32, time: f32, number: u32, types: String, x: f64, y: f64, z: f64) {
+    pub fn add_point(&mut self, frame: u32, time: f32, confidence: f32, pose: bool, pose_x: f64, pose_y: f64, pose_z: f64, number: u32, types: String, x: f64, y: f64, z: f64) {
         
         self.frame.push(frame);
         self.timestamp.push(time);
+        self.pose.push(pose);
+        self.pose_x.push(pose_x);
+        self.pose_y.push(pose_y);
+        self.pose_z.push(pose_z);
         self.coordinate_number.push(number);
         self.types.push(types);
         self.x.push(x);

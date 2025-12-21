@@ -20,10 +20,12 @@ shell.rs sort of acts like a receptionist
 */
 
 use std::process::Command;
+use std::path::Path;
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 
 use crate::shell::projectManager::session::{SessionData, DirectoryVerifiers, SystemVerifier};
+use crate::drivers::OpenFace::openface::{parse_openface_data};
 
 pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
     println!("MOSAIC -- v0.2.0 pre-release (GLPv3)\n"); // opening message
@@ -48,7 +50,7 @@ pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
                     
                 }
 
-                // FOLLOWING THREE COMMANDS ARE JUST FOR TESING THE SYSTEM VERIFIER FUNCS IN "session.rs"
+                // FOLLOWING FOUR COMMANDS ARE JUST FOR TESING THE SYSTEM VERIFIER FUNCS IN "session.rs"
                 if line.trim() == "project"{
                     let project_path = SystemVerifier::project();
                     match project_path {
@@ -83,6 +85,11 @@ pub fn shell_initiation(session: &mut SessionData) -> Result<()> {
                         }
 
                     }               
+                }
+
+                if line.trim() == "UMD"{
+                    let PATH_TEMP: &str = "/Users/harrywoodhouse/Desktop/MOSAIC/MOSAIC-Engine/test_data/v15044gf0000d1dlc67og65r2deqmhd0.csv";
+                    parse_openface_data(Path::new(PATH_TEMP)).expect("Failed to parse data");
                 }
             }
             Err(ReadlineError::Interrupted) => { // Handles Ctrl-C
