@@ -13,7 +13,7 @@ You should have received a copy of the GNU General Public License along with
 MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 */
 
-use crate::models::coreMeasurementModel::UMD::{UMD};
+use crate::UMD::{UMD};
 use crate::errors::{MosaicError, UMDError, FileError};
 
 use std::path::Path;
@@ -269,3 +269,9 @@ pub fn parse_openface_data(path: &Path) -> Result<UMD, MosaicError> {
     println!("File read successfully."); // for testing
     Ok(umd)
 }
+
+/*
+NOW THAT THE UMD HAS BEEN SETUP - WE NO LONGER NEED THE OPENFACE DATA
+
+ALL MODULES ARE NOW RAN BY THE ANALYSIS SECTION
+*/

@@ -15,6 +15,7 @@ MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 
 // This will act as an API for the drivers so they can append data properly
 use crate::drivers::OpenFace::openface::{OpenFaceLandmarkType};
+use polars::prelude::*;
 
 pub struct UMD {
     // admin info
@@ -86,6 +87,9 @@ impl UMD{
     }
 }
 
+// saving to UMD parquet
+
+
 // ANCHOR UMD
 // Defining a point anchor is essential to centering the points to (0,0,0)
 
@@ -130,4 +134,13 @@ impl UMDAnchor{
         self.y_anchor_uncertainty.push(y_anchor_uncertainty);
         self.z_anchor_uncertainty.push(z_anchor_uncertainty);
     }
+}
+
+// GLOBAL COORDINATES UMD
+pub struct UMDGlobalCoordinates {
+    
+}
+
+// POSE CORRECTED COORDINATES
+pub struct UMDPoseCorrectedCoordinates {
 }
