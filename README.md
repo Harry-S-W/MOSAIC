@@ -56,13 +56,13 @@ Praat analysis compares the movement of the mouth to what the mouth is doing. Fo
 ## API Reference
 I have never written an API reference before so please email me using the author information below for any changes (or submit a pull request I think).
 
-#### Installing OAS
+#### Installing MOSAIC
 
 ```http
   pip install https://github.com/Harry-S-W/MOSAIC.git
 ```
 
-#### Using OAS
+#### Using MOSAIC
 MOSAIC Uses a REPL (under heavy development) to make the CLI as intuitive as possible
 
 To access the shell:
@@ -91,7 +91,7 @@ This pattern is followed when accessing participant and trial directories as wel
 
 ## Authors
 
-- Harry Woodhouse, University of York - [@harry-s-w](https://github.com/Harry-S-W)
+- Harry Woodhouse, University of York - [Github: @Harry-S-W](https://github.com/Harry-S-W), [Website:](https://harrywstephen.com)
 
 
 ## License
