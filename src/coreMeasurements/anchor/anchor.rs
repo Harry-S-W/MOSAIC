@@ -21,6 +21,10 @@ This file calculates the anchor as a reference point in the mouth by taking the 
 of points across the mouth and defining a centralised anchor point
 */
 
+use crate::errors::{MosaicError, AnchorError, FileError};
+use crate::UMD::{UMDAnchor};
+
+
 #[derive(Debug)]
 pub struct AnchorCoordinate {
     timestamp: f32,
@@ -48,7 +52,7 @@ impl AnchorCoordinate{
         }
     }*/
 
-    pub fn anchor(time: f32, coordinate_list: &[[f64; 3]]) -> Self {
+    pub fn anchor(time: f32, coordinate_list: &[[f64; 3]]) -> Result<UMD, MosaicError> {
         let mut x_sum: f64 = 0.0; //place holder for adding x vals
         let mut y_sum: f64 = 0.0; // place holder for adding y vals
         let mut z_sum: f64 = 0.0; // place holder for adding z vals
@@ -66,12 +70,9 @@ impl AnchorCoordinate{
         let y = y_sum / coordinate_list.len() as f64;
         let z = z_sum / coordinate_list.len() as f64;
 
-        Self {
-            timestamp: time,
-            x_anchor: x,
-            y_anchor: y,
-            z_anchor: z,
-        }
+        // then we just call the add_anchor function in UMD
+        //&mut self, frame: u32, timestamp: f32, x_anchor: f64, y_anchor: f64, z_anchor: f64, x_anchor_uncertainty: f64, y_anchor_uncertainty: f64, z_anchor_uncertainty: f64
+        UMDAnchor::add_anchor()
 
         //println!("X sum: {}\nY sum: {}\nZ sum: {}", x_sum, y_sum, z_sum);
         //println!("Anchor Coordinate: ({}, {}, {})", x_anchor, y_anchor, z_anchor);

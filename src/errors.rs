@@ -23,6 +23,7 @@ pub enum MosaicError {
     Participant(ParticipantError),
     Trial(TrialError),
     UMD(UMDError),
+    Anchor(AnchorError),
     Io(std::io::Error),
     File(FileError),
 }
@@ -82,6 +83,12 @@ pub enum UMDError{
     MissingPoseZ, // Only enabled if the user selected pose correction when running command
     MissingConfidence, // we need OpenFace confidence levels when using fram filtering to excluce bad frames
 
+}
+
+// ANCHOR ERRORS
+#[derive(Debug)]
+pub enum AnchorError{
+    testError,
 }
 
 impl From<FileError> for MosaicError {

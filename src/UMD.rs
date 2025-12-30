@@ -130,9 +130,9 @@ impl UMDAnchor{
         self.x_anchor.push(x_anchor);
         self.y_anchor.push(y_anchor);
         self.z_anchor.push(z_anchor);
-        self.x_anchor_uncertainty.push(x_anchor_uncertainty);
-        self.y_anchor_uncertainty.push(y_anchor_uncertainty);
-        self.z_anchor_uncertainty.push(z_anchor_uncertainty);
+        //self.x_anchor_uncertainty.push(x_anchor_uncertainty);
+        //self.y_anchor_uncertainty.push(y_anchor_uncertainty);
+        //self.z_anchor_uncertainty.push(z_anchor_uncertainty);
     }
 }
 
