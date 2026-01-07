@@ -1,12 +1,15 @@
 [![Rust, Python](https://img.shields.io/badge/languages-Rust%2C_Python-Blue
 )](https://www.rust-lang.org/)
 [![Topic](https://img.shields.io/badge/field-Phonetics-blue.svg)]()
-![GitHub Tag](https://img.shields.io/github/v/tag/Harry-S-W/MOSAIC)
+[![University](https://img.shields.io/badge/University-University_of_York-white)](https://www.york.ac.uk/)
+[![Website](https://img.shields.io/badge/Website-mosaic.harrywoodhouse.com-yellow)](https://mosaic.harrywoodhouse.com)
+
 
 
 # Motor-Oral Speech Analysis & Integrated Computation (MOSAIC)
 
 Motor-Oral Speech Analysis & Integrated Computation (MOSAIC) is a mathematical system which tracks mouth and jaw movement and correlates those measurements to a [parselmouth/praat](https://parselmouth.readthedocs.io/en/stable/#) analysis. MOSAIC has three measurement "units": core measurements, complex measurements, and praat based measurements. 
+
 
 ## UPDATE:
 For the one or two people who may be watching this project, you may notice the absence of code. All Python code which contributed to the backend of this project is being re-written in Rust. This is done because A) it gives me an oppurtunity to re-write this project cleaner, and B) I am re-programming MOSAIC with the idea of using "drivers" so researchers can use different types of data sets from different machines/software. 
