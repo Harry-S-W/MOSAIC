@@ -19,6 +19,15 @@ core shell file which parses commands and allocates them to seperate files which
 shell.rs sort of acts like a receptionist
 */
 
+/*
+
+NEW SHELL
+
+- For easier development in the future, the shell has been redesigned where it is a series of match startments. There are defined root commands
+and inside the root commands there is a match statement for an argument (i.e. project + open). This way we can edit individual commands and they sort of act
+as their own family. 
+*/
+
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 
@@ -32,90 +41,89 @@ pub fn shell_initiation(_session: &mut SessionData) -> Result<()> {
 
     loop {
         let readline = rl.readline("MOSAIC >> ");
-        println!(""); // adding space before shell output
+        println!(""); 
         match readline {
             Ok(line) => {
-                if line.trim() == "quit"{
-                    break;
-                }
-                if line.trim() == "exit"{
-                    break;
+                let args = match shell_words::split(&line) {
+                    Ok(args) => args,
+                    Err(_) => {
+                        eprintln!("[MOSAIC ERROR] Mismatched quotes in command.");
+                        continue;
+                    }
+                };
+                if args.is_empty() {
+                    continue;
                 }
 
-                if line.trim() == "session"{
-                    let data = SessionData::read_session_data();
+                // We match on a slice of references: &[&str]
+                let arg_refs: Vec<&str> = args.iter().map(|s| s.as_str()).collect();
 
-                    println!("Session Data:\n{:#?}", data);
+                match arg_refs.as_slice() {
+                    [] => continue,
+                    ["quit"] | ["exit"] => break,
                     
-                }
+                    ["session"] => {
+                        let data = SessionData::read_session_data();
+                        println!("Session Data:\n{:#?}", data);
+                    }
 
-                // FOLLOWING FOUR COMMANDS ARE JUST FOR TESING THE SYSTEM VERIFIER FUNCS IN "session.rs"
-                if line.trim() == "project"{
-                    let project_path = SystemVerifier::project();
-                    match project_path {
-                        Ok(_) => println!("Project Path: {:?}", project_path.unwrap()),
-
-                        Err(err) => {
-                            eprintln!("[MOSAIC ERROR] {}", err)
+                    // project commands
+                    ["project", secondary_command, ..] => {
+                        match *secondary_command {
+                            "open" => {
+                                // path checker
+                                if let Some(path) = arg_refs.get(2) {
+                                    println!("Opening project at directory: {}", path);
+                                    // SystemVerifier::project_open(path);
+                                } else {
+                                    eprintln!("[MOSAIC ERROR] 'project open' requires a file directory path.");
+                                }
+                            }
+                            "delete" => { // more here to keep the idea - NOT FUNCTIONAL
+                                if let Some(id) = arg_refs.get(2) {
+                                    println!("Deleting project: {}", id);
+                                } else {
+                                    eprintln!("[MOSAIC ERROR] 'project delete' requires a target ID or path.");
+                                }
+                            }
+                            _ => println!("Unknown project command: '{}'", secondary_command),
                         }
+                    }
 
-                    }               
-                }
-
-                if line.trim() == "participant"{
-                    let participant_path = SystemVerifier::participant();
-                    match participant_path {
-                        Ok(_) => println!("Participant Path: {:?}", participant_path.unwrap()),
-
-                        Err(err) => {
-                            eprintln!("[MOSAIC ERROR] {}", err)
+                    // Participant commands
+                    ["participant", "verify"] => {
+                        match SystemVerifier::participant() {
+                            Ok(path) => println!("Participant Path: {:?}", path),
+                            Err(err) => eprintln!("[MOSAIC ERROR] {}", err),
                         }
+                    }
 
-                    }               
-                }
+                    // UMD
+                    ["umd", "run"] => {
+                        let input_path = "/Users/harrywoodhouse/MOSAIC/MOSAIC/test_data/v15044gf0000d1dlc67og65r2deqmhd0.csv";
+                        let output_path = "/Users/harrywoodhouse/MOSAIC/MOSAIC/MOSAIC-Engine/data/";
+                        run::init(input_path, output_path);
+                    }
 
-                if line.trim() == "trial"{
-                    let trial_path = SystemVerifier::trial();
-                    match trial_path {
-                        Ok(_) => println!("Path: {:?}", trial_path.unwrap()),
-
-                        Err(err) => {
-                            eprintln!("[MOSAIC ERROR] {}", err)
-                        }
-
-                    }               
-                }
-
-                if line.trim() == "UMD"{
-                    let input_path = "/Users/harrywoodhouse/MOSAIC/MOSAIC/test_data/v15044gf0000d1dlc67og65r2deqmhd0.csv";
-                    let output_path = "/Users/harrywoodhouse/MOSAIC/MOSAIC/MOSAIC-Engine/data/";
-
-                    // defining placeholder metadata: 
-                    let _driver = "OpenFace v2.2";
-                    let _dimension = "2D";
-                    let _pose_correction = true;
-
-                    run::init(input_path, output_path);
-                }
-
-                if line.trim() == "test-py"{
-                    run::test_python();
-                    println!("Test python command")
+                    // Unknown
+                    [unknown, ..] => {
+                        println!("Unknown command root: '{}'", unknown);
+                    }
                 }
             }
-            Err(ReadlineError::Interrupted) => { // Handles Ctrl-C
+            Err(ReadlineError::Interrupted) => { // Ctrl-C
                 println!("CTRL-C");
                 break
             },
-            Err(ReadlineError::Eof) => { // Handles Ctrl-D
+            Err(ReadlineError::Eof) => { // Ctrl-D
                 println!("CTRL-D");
                 break
             },
             Err(err) => {
-                eprintln!("Something went wrong: {:?}", err); // Note when coming back: Find out why this error is not printing
+                eprintln!("Something went wrong: {:?}", err); 
             }
         }
-        println!(""); // adding space after shell output
+        println!(""); 
 
         
     }
