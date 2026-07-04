@@ -31,7 +31,7 @@ is happening to the data. This is not a finished product.
 
 // POINT ORDER:
 // LIPS (CLOCKWISE ALWAYS) -> TONGUE -> JAW -> OTHERS
-// LANDMARK TYPE STRUCTURE HAS BEEN MOVED TO BE DRIVER SPECIFIC
+// LANDMARK TYPE STRUCTURE HAS BEEN MOVED TO BE DRIVER SPECIFIc
 
 #[derive(Debug)]
 pub struct UMD {
