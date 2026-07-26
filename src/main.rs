@@ -15,6 +15,7 @@ MOSAIC. If not, see <https://www.gnu.org/licenses/>.
 
 // Note to self:
 // RUSTFLAGS="-A warnings" cargo run     --  to run cargo without all the warnings
+// export PYO3_PYTHON="/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11"        -- Reset the python path
 use std::path::Path;
 
 
