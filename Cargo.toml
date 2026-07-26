@@ -1,6 +1,6 @@
 [package]
 name = "MOSAIC"
-version = "0.3.4-alpha"
+version = "0.3.5-alpha"
 edition = "2024"
 authors = ["Harry Woodhouse <jgf526@york.ac.uk>"]
 description = "Motor Oral Speech Analysis and Integrated Computation (MOSAIC)"
@@ -23,3 +23,4 @@ nalgebra = "0.34.1"
 pyo3 = { version = "0.28.1", features = ["auto-initialize", "macros"] }
 tauri = { version = "2.0.0", features = [] }
 shell-words = "1.1.0"
+MOSAIC-UMD = "0.1.1"

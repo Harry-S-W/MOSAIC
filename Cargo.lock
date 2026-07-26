@@ -4,8 +4,9 @@ version = 4
 
 [[package]]
 name = "MOSAIC"
-version = "0.3.4-alpha"
+version = "0.3.5-alpha"
 dependencies = [
+ "MOSAIC-UMD",
  "clap",
  "csv",
  "nalgebra",
@@ -19,6 +20,16 @@ dependencies = [
  "tauri",
  "thiserror 1.0.69",
  "uuid",
+]
+
+[[package]]
+name = "MOSAIC-UMD"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c18c80b7790e73de872fc1babac03f454032d92d88a9a2bcdf5db6bb4a3d9977"
+dependencies = [
+ "polars",
+ "polars-io",
 ]
 
 [[package]]
